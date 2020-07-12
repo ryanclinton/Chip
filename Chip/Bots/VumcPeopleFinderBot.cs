@@ -1,7 +1,7 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 //
-// Generated with Bot Builder V4 SDK Template for Visual Studio EchoBot v4.9.2
+// Generated with Bot Builder V4 SDK Template for Visual Studio VumcPeopleFinderBot v4.9.2
 
 using System;
 using System.Collections.Generic;
@@ -18,7 +18,7 @@ using Newtonsoft.Json;
 
 namespace Chip.Bots
 {
-    public class EchoBot : ActivityHandler
+    public class VumcPeopleFinderBot : TeamsActivityHandler
     {
         protected override async Task OnMessageActivityAsync(ITurnContext<IMessageActivity> turnContext, CancellationToken cancellationToken)
         {
