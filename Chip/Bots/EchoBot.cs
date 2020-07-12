@@ -49,7 +49,7 @@ namespace Chip.Bots
                             {
                                 String responseString = reader.ReadToEnd();
                                 String[] tableRows = responseString.Split("<tr>");
-                                AdaptiveCard replyCard = ProcessRows(tableRows);
+                                AdaptiveCard replyCard = ProcessRows(name, tableRows);
 
                                 var reply = new Attachment()
                                 {
@@ -66,14 +66,14 @@ namespace Chip.Bots
         }
 
 
-        private static AdaptiveCard ProcessRows(String[] tableRows)
+        private static AdaptiveCard ProcessRows(String name, String[] tableRows)
         {
             String schimaVersion = "1.0";
             AdaptiveCard card = new AdaptiveCard(schimaVersion);
 
             card.Body.Add(new AdaptiveTextBlock
             {
-                Text = "User Card",
+                Text = $"All About {name}",
                 Size = AdaptiveTextSize.Large,
                 Weight = AdaptiveTextWeight.Bolder
             });
@@ -82,7 +82,7 @@ namespace Chip.Bots
             {
                 String s = Regex.Replace(tableRows[i], "<.*?>", String.Empty);
                 s = Regex.Replace(s, @"\s+", " ");
-                s = Regex.Replace(s, "&nbsp;", String.Empty);
+                s = Regex.Replace(s, "&nbsp;?", String.Empty);
 
                 card.Body.Add(new AdaptiveTextBlock(s));
             }
@@ -91,11 +91,11 @@ namespace Chip.Bots
 
         protected override async Task OnMembersAddedAsync(IList<ChannelAccount> membersAdded, ITurnContext<IConversationUpdateActivity> turnContext, CancellationToken cancellationToken)
         {
-            var welcomeText = "Hello and welcome!";
             foreach (var member in membersAdded)
             {
                 if (member.Id != turnContext.Activity.Recipient.Id)
                 {
+                    var welcomeText = $"Hello and welcome, {member.Name}!";
                     await turnContext.SendActivityAsync(MessageFactory.Text(welcomeText, welcomeText), cancellationToken);
                 }
             }
