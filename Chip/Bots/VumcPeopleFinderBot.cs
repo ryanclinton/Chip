@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Net;
+using System.Security.Policy;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
@@ -31,7 +32,8 @@ namespace Chip.Bots
 
                 //var name = "Ryan Clinton";
                 var names = name.Split(" ");
-                HttpWebRequest myReq = (HttpWebRequest)WebRequest.Create($"https://peoplefinder.app.vumc.org/index.jsp?action=list&Last={names[1]}&First={names[0]}&IsStaff=on&IsStudent=on&Find=Find");
+                var url = $"https://peoplefinder.app.vumc.org/index.jsp?action=list&Last={names[1]}&First={names[0]}&IsStaff=on&IsStudent=on&Find=Find";
+                HttpWebRequest myReq = (HttpWebRequest)WebRequest.Create(url);
                 myReq.Method = "GET";
 
                 using (HttpWebResponse response = (HttpWebResponse)myReq.GetResponse())
@@ -49,7 +51,7 @@ namespace Chip.Bots
                             {
                                 String responseString = reader.ReadToEnd();
                                 String[] tableRows = responseString.Split("<tr>");
-                                AdaptiveCard replyCard = ProcessRows(name, tableRows);
+                                AdaptiveCard replyCard = ProcessRows(name, url, tableRows);
 
                                 var reply = new Attachment()
                                 {
@@ -66,7 +68,7 @@ namespace Chip.Bots
         }
 
 
-        private static AdaptiveCard ProcessRows(String name, String[] tableRows)
+        private static AdaptiveCard ProcessRows(String name, String url, String[] tableRows)
         {
             String schimaVersion = "1.0";
             AdaptiveCard card = new AdaptiveCard(schimaVersion);
@@ -86,6 +88,11 @@ namespace Chip.Bots
 
                 card.Body.Add(new AdaptiveTextBlock(s));
             }
+
+            var button = new AdaptiveOpenUrlAction();
+            button.Title = "Open in People Finder";
+            button.Url = new Uri(url);
+            card.Actions.Add(button);
             return card;
         }
 
