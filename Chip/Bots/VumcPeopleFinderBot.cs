@@ -102,7 +102,7 @@ namespace Chip.Bots
             {
                 if (member.Id != turnContext.Activity.Recipient.Id)
                 {
-                    var welcomeText = $"Hello and welcome, {member.Name}!";
+                    var welcomeText = $"Hello and greetings, {member.Name}!";
                     await turnContext.SendActivityAsync(MessageFactory.Text(welcomeText, welcomeText), cancellationToken);
                 }
             }
